@@ -13,8 +13,9 @@ class Block:
         self.nonce = 0
         self.prev_hash = prev_hash
     
-    def hash_block(self):
-        block = {'index': self.index, 'transactions': self.transactions, 'timestamp':self.timestamp, 'hash':self.hash, 'proof':self.proof, 'nonce':self.nonce, 'prev_hash': self.prev_hash, }
+    def hash_block(self,prev_hash=0):
+        self.prev_hash = prev_hash
+        block = {'index': self.index, 'transactions': self.transactions, 'timestamp':self.timestamp, 'hash':self.hash, 'proof':self.proof, 'nonce':self.nonce, 'prev_hash': self.prev_hash }
         jsoned = json.dumps(block,sort_keys=True)
         hashed = sha256(jsoned.encode('utf-8')).hexdigest()
         self.hash = hashed
@@ -59,19 +60,35 @@ class BlockChain:
     def hash_blocks(self):
         for i,b in enumerate(self.chain):
             if i == 0:
-                b.prev_hash = 0
-                continue
-            b.prev_hash = self.chain[i-1].hash
-        return self.chain
+                prev_hash = 0
+                genesis = b
+                genesis.hash_block(prev_hash)
+            else:
+                prev_hash = self.chain[i-1].hash
+                b.hash_block(prev_hash)
 
     def set_difficulty(self,difficulty):
         zeros = ''
         for i in range(difficulty):
             zeros += '0'
         # zeros = zeros[1:]
-        for b in self.chain:
+        for i,b in enumerate(self.chain):
             b.hash = zeros + b.hash
+            if i == 0:
+                b.prev_hash = 0
+                continue
+            b.prev_hash = self.chain[i-1].hash
+        return self.chain
+        
         return zeros
+    
+    def check_difficulty(self,difficulty):
+        genesis_hash = self.chain[0].hash
+        for i,c in enumerate(genesis_hash):
+            if c != '0':
+                break
+        return i >= difficulty
+
     
     def blockchain(self):
         for b in self.chain:
@@ -90,11 +107,15 @@ bc.add_block()
 bc.add_block()
 
 # bc.blockchain()
-print('\n')
-bc.set_difficulty(3)
-bc.hash_blocks()
+# print('\n')
+# bc.set_difficulty(7)
+# bc.hash_blocks()
+bc.set_difficulty(5)
+# bc.hash_blocks()
+# bc.blockchain()
 
-bc.blockchain()
+x = bc.check_difficulty(8)
+print(x)
 
 
 
