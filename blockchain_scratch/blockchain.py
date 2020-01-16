@@ -6,22 +6,22 @@ from time import time
 class Block:
     def __init__(self,transactions, prev_hash, i):
         self.index = i
+        self.transactions = transactions
         self.timestamp = time()
-        # self.hash = sha256('test'.encode('utf-8')).hexdigest()
         self.hash = None
         self.proof = None
+        self.nonce = 0
         self.prev_hash = prev_hash
-        self.transactions = transactions
     
     def hash_block(self):
-        block = {'index': self.index, 'timestamp':self.timestamp, 'hash':self.hash, 'proof':self.proof, 'prev_hash': self.prev_hash, 'transactions': self.transactions}
+        block = {'index': self.index, 'transactions': self.transactions, 'timestamp':self.timestamp, 'hash':self.hash, 'proof':self.proof, 'nonce':self.nonce, 'prev_hash': self.prev_hash, }
         jsoned = json.dumps(block,sort_keys=True)
         hashed = sha256(jsoned.encode('utf-8')).hexdigest()
         self.hash = hashed
         return hashed
 
     def __repr__(self):
-        block = {'index': self.index, 'timestamp':self.timestamp, 'hash':self.hash, 'proof':self.proof, 'prev_hash': self.prev_hash, 'transactions': self.transactions}
+        block = {'index': self.index, 'transactions': self.transactions, 'timestamp':self.timestamp, 'hash':self.hash, 'proof':self.proof, 'nonce':self.nonce, 'prev_hash': self.prev_hash, }
         stringified_block = json.dumps(block, sort_keys=True)
         
         return stringified_block
@@ -55,6 +55,28 @@ class BlockChain:
                 block.index = self.chain[-1].index + 1
                 block.hash_block()
                 self.chain.append(block)
+
+    def hash_blocks(self):
+        for i,b in enumerate(self.chain):
+            if i == 0:
+                b.prev_hash = 0
+                continue
+            b.prev_hash = self.chain[i-1].hash
+        return self.chain
+
+    def set_difficulty(self,difficulty):
+        zeros = ''
+        for i in range(difficulty):
+            zeros += '0'
+        # zeros = zeros[1:]
+        for b in self.chain:
+            b.hash = zeros + b.hash
+        return zeros
+    
+    def blockchain(self):
+        for b in self.chain:
+            print(b)
+            print('\n')
         
     def __repr__(self):
         return str(self.chain)
@@ -65,14 +87,24 @@ bc.add_block()
 bc.add_block()
 bc.add_block()
 bc.add_block()
+bc.add_block()
 
-for block in bc.chain:
-    print(block)
-    print('\n')
+# bc.blockchain()
+print('\n')
+bc.set_difficulty(3)
+bc.hash_blocks()
+
+bc.blockchain()
 
 
 
 
+
+
+
+
+# hashed = sha256('test'.encode('utf-8')).hexdigest()
+# x = bc.hash_difficulty(hashed,3)
 
 
 
