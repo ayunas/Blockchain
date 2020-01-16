@@ -4,17 +4,17 @@ from time import time
 
 
 class Block:
-    def __init__(self,transactions, prev_hash, i):
+    def __init__(self,transactions, prev_hash, i, proof=0):
         self.index = i
         self.transactions = transactions
         self.timestamp = time()
         self.hash = None
-        self.proof = None
+        self.proof = proof
         self.nonce = 0
         self.prev_hash = prev_hash
     
-    def hash_block(self,prev_hash=0):
-        self.prev_hash = prev_hash
+    def hash_block(self):
+        # self.prev_hash = prev_hash
         block = {'index': self.index, 'transactions': self.transactions, 'timestamp':self.timestamp, 'hash':self.hash, 'proof':self.proof, 'nonce':self.nonce, 'prev_hash': self.prev_hash }
         jsoned = json.dumps(block,sort_keys=True)
         hashed = sha256(jsoned.encode('utf-8')).hexdigest()
@@ -61,29 +61,30 @@ class BlockChain:
         self.transactions = []
     
     def add_block(self,exchanges,existing_block=None):
-        # if sender is None:
-        #     t = Transaction('amir','nadia',50)
-        #     self.transactions.append(t)
-        # else:
 
-        ts = []
+        xs = [] #xs stands for exchanges.  the array storing the stringified Transaction objects
         for x in exchanges:
             sender,receiver,amount = x
             t = Transaction(sender,receiver,amount)
-            ts.append(str(t))
-        # str(t)
-        # self.transactions.append(str(t))
-        self.transactions += ts
+            xs.append(str(t))
+
+        self.transactions += xs
 
         if existing_block is None:
             if not len(self.chain):
-                genesis = Block(ts,0,1)
+                prev_hash,index,proof = 0,1,0
+                genesis = Block(xs,prev_hash,index,proof)
                 genesis.hash_block()
                 self.chain.append(genesis)
             else: #there exists blocks on the chain
                 prev_hash = self.chain[-1].hash
+                print('prev_hash', prev_hash)
+                last_proof = self.chain[-1].proof
+                print('last_proof', last_proof)
                 index = self.chain[-1].index + 1
-                new_block = Block(ts,prev_hash,index)
+                proof = self.proof_of_work(last_proof,5)
+                print('proof: ',proof)
+                new_block = Block(xs,prev_hash,index,proof)
                 new_block.hash_block()
                 self.chain.append(new_block)
         else: #block has been passed in
@@ -97,6 +98,41 @@ class BlockChain:
                 block.index = self.chain[-1].index + 1
                 block.hash_block()
                 self.chain.append(block)
+
+    def proof_of_work(self, last_proof,difficulty=3):
+        ''' - Find a number p' such that hash(pp') contains leading 4 zeroes, where p is the previous p'
+         - p is the previous proof, and p' is the new proof'''
+
+        proof = 0
+        zeros = ''
+
+        for i in range(difficulty):
+            zeros += '0'
+        print('zeros', zeros)
+
+        while self.hash_try(proof,last_proof)[:difficulty] != zeros:
+            # print(f'attempt # {proof}', self.hash_try(proof,last_proof))
+            proof += 1
+        
+        print('found solution:', self.hash_try(proof,last_proof))
+        return proof
+
+        # x = len(self.transactions)
+        # y = 0
+
+        # simple problem:  find a hash
+        # while sha256(str(x*y).encode('utf-8')).hexdigest()[:5] != '00000':
+        #     y += 1
+        # hashed = sha256(str(x*y).encode('utf-8')).hexdigest()
+        # print('found solution: ', y)
+        # return hashed
+         # while sha256(str(proof + last_proof).encode('utf-8')).hexdigest()[:3] != '000':
+        #      proof += 1
+       
+
+    def hash_try(self,proof,last_proof):
+        new_proof = str(proof) + str(last_proof)
+        return sha256(new_proof.encode('utf-8')).hexdigest()
 
     def hash_blocks(self):
         for i,b in enumerate(self.chain):
@@ -151,9 +187,9 @@ jl12 = ('jose','leanna',12)
 bc.add_block([an2])
 bc.add_block([jj10,zz5,ma50])
 
-# bc.add_block('zieger','zelda',5)
-# bc.add_block('muhammad','abdullah',50)
-# bc.add_block('jose','leanna',12)
+bc.blockchain()
+
+
 
 # bc.blockchain()
 # print('\n')
@@ -168,7 +204,7 @@ bc.add_block([jj10,zz5,ma50])
 # bc.hash_blocks()
 
 
-bc.blockchain()
+# bc.blockchain()
 
 
 
