@@ -27,22 +27,63 @@ class Block:
         
         return stringified_block
 
+class Transaction:
+    def __init__(self,sender,receiver,amount):
+        self.sender = sender
+        self.receiver = receiver
+        self.amount = amount
+    
+    def hash_transaction(self):
+        transaction = {
+            'sender': self.sender,
+            'recipient': self.receiver,
+            'amount': self.amount
+        }
+        jsoned = json.dumps(transaction,sort_keys=True)
+        return sha256(jsoned.encode('utf-8')).hexdigest()
+    
+    def __repr__(self):
+        transaction = {
+            'sender': self.sender,
+            'recipient': self.receiver,
+            'amount': self.amount
+        }
+        return str(transaction)
+
+# t = Transaction('amir','nadia',50)
+# print(t)
+
+
 
 class BlockChain:
     def __init__(self):
         self.chain = []
         self.transactions = []
     
-    def add_block(self,transactions=[],block=None):
-        if block is None:
+    def add_block(self,exchanges,existing_block=None):
+        # if sender is None:
+        #     t = Transaction('amir','nadia',50)
+        #     self.transactions.append(t)
+        # else:
+
+        ts = []
+        for x in exchanges:
+            sender,receiver,amount = x
+            t = Transaction(sender,receiver,amount)
+            ts.append(str(t))
+        # str(t)
+        # self.transactions.append(str(t))
+        self.transactions += ts
+
+        if existing_block is None:
             if not len(self.chain):
-                genesis = Block(transactions,0,1)
+                genesis = Block(ts,0,1)
                 genesis.hash_block()
                 self.chain.append(genesis)
             else: #there exists blocks on the chain
                 prev_hash = self.chain[-1].hash
                 index = self.chain[-1].index + 1
-                new_block = Block(transactions,prev_hash,index)
+                new_block = Block(ts,prev_hash,index)
                 new_block.hash_block()
                 self.chain.append(new_block)
         else: #block has been passed in
@@ -100,22 +141,35 @@ class BlockChain:
 
 
 bc = BlockChain()
-bc.add_block()
-bc.add_block()
-bc.add_block()
-bc.add_block()
-bc.add_block()
+
+an2 = ('amir','nancy',20)
+jj10 = ('joe','jacob',10)
+zz5 = ('zieger','zelda',5)
+ma50 = ('muhammad','abdullah',50)
+jl12 = ('jose','leanna',12)
+
+bc.add_block([an2])
+bc.add_block([jj10,zz5,ma50])
+
+# bc.add_block('zieger','zelda',5)
+# bc.add_block('muhammad','abdullah',50)
+# bc.add_block('jose','leanna',12)
 
 # bc.blockchain()
 # print('\n')
 # bc.set_difficulty(7)
 # bc.hash_blocks()
-bc.set_difficulty(5)
+# bc.set_difficulty(5)
 # bc.hash_blocks()
 # bc.blockchain()
 
-x = bc.check_difficulty(8)
-print(x)
+# x = bc.check_difficulty(3)
+# print(x)
+# bc.hash_blocks()
+
+
+bc.blockchain()
+
 
 
 
