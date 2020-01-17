@@ -4,6 +4,7 @@ import random
 from time import time
 from uuid import uuid4
 from textwrap import dedent
+from urllib import urlparse
 
 from flask import Flask,jsonify,request
 
@@ -15,8 +16,39 @@ class BlockChain:
     def __init__(self):
         self.chain = []
         self.transactions = []
+        self.nodes = set()
     
-    # def add_block(self,exchanges,existing_block=None):
+    def register_node(self,address):
+        parsed_url = urlparse(address)
+        self.nodes.add(parsed_url.netloc)
+
+    def consensus_chain(self, chain,difficulty):
+        prev_block = chain[0]
+        current_index = 1
+
+        while current_index < len(chain):
+            block = chain[current_index]
+            print(prev_block)
+            print(block)
+            print('\n-------------\n')
+
+            if block['prev_hash'] != self.hash(prev_block):
+                return False
+
+            zeros = ''
+            for i in range(difficulty):
+                zeros += '0'
+            
+            #check proof of work is valid:
+            proof = block['proof']
+            prev_proof = prev_block['proof']
+            hashed_proof = self.hash_proofs(proof,prev_proof)
+            if hashed_proof[:difficulty] != zeros:  #the proof should always end up passing the work test, that value is what succeeded the first time.
+                return False
+            
+            prev_block = block
+            current_index += 1
+        return True
 
     def new_transaction(self,sender,receiver,amount):
         # t = Transaction(sender,receiver,amount)
