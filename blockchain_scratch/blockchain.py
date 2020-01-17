@@ -32,14 +32,14 @@ class BlockChain:
             return self.last_block['index'] + 1 #return the index of the next block to add this particular transaction to after the new block is mined.
         else: return 2
 
-    def new_block(self, last_proof=0, prev_hash=0):
+    def new_block(self, proof, prev_hash=0):
 
-        if not len(self.chain):
-            last_proof = 0
-        else:
-            last_proof = self.chain[-1]['proof']
+        # if not len(self.chain):
+        #     last_proof = 0
+        # else:
+        #     last_proof = self.chain[-1]['proof']
     
-        proof = self.proof_of_work(last_proof,4) #whoever gets the proof of work, then their block will be created with all the transactions pending in the blockchain. then the transactions will be cleared out again
+        # proof = self.proof_of_work(last_proof,4) #whoever gets the proof of work, then their block will be created with all the transactions pending in the blockchain. then the transactions will be cleared out again
 
         print('proof', proof)
 
@@ -107,7 +107,7 @@ class BlockChain:
     
     @property
     def last_block(self):
-        return self.chain[-1]
+        return self.chain[-1] if len(self.chain) else None
 
     def blockchain(self):
         for b in self.chain:
@@ -122,15 +122,18 @@ app = Flask(__name__)
 
 node_identifier = str(uuid4()).replace('-', '')
 
+# bc = BlockChain()
+# bc.new_block()
+# last_proof = bc.last_block['proof']
+# proof = bc.proof_of_work(last_proof)
+# prev_hash = bc.hash(bc.last_block)
+# bc.new_block(proof,prev_hash)
+
+# bc.new_transaction('amir','nancy',20)
+
+# bc.blockchain()
+
 bc = BlockChain()
-bc.new_block()
-bc.new_block()
-bc.new_block()
-bc.new_transaction('amir','nancy',20)
-bc.new_block()
-bc.blockchain()
-
-
 
 @app.route('/')
 def hello_world():
@@ -138,7 +141,35 @@ def hello_world():
 
 @app.route('/mine', methods=['GET'])
 def mine():
-    return "We'll mine a new Block"
+    # return "We'll mine a new Block"
+    '''
+    1.Calculate the Proof of Work
+    2.Reward the miner (us) by adding a transaction granting us 1 coin
+    3.Forge the new Block by adding it to the chain
+    '''
+    #where to get the last_proof from?
+    if not bc.last_block:
+        last_proof = 0
+    else: last_proof = bc.last_block['proof']
+    proof = bc.proof_of_work(last_proof,5)
+    prev_hash = bc.hash(bc.last_block)
+    bc.new_transaction('0',node_identifier,1)
+
+    new_block = bc.new_block(proof,prev_hash)
+
+    response = {
+        'message': 'New Block Forged',
+        'index': new_block['index'],
+        'transactions': new_block['transactions'],
+        'proof': new_block['proof'],
+        'prev_hash': new_block['prev_hash']
+    }
+
+    return jsonify(response), 200
+
+
+
+
 
 @app.route('/transactions/new', methods=['POST'])
 def new_transaction():
@@ -151,7 +182,7 @@ def new_transaction():
 
     index = bc.new_transaction(values['sender'],values['receiver'],values['amount'])
     response = {'message': f"Transaction will be added to Block {index}"}
-    return jsonify(response)
+    return jsonify(response), 201
 
     # return "We'll add a new transaction"
 
