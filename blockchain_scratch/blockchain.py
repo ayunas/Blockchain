@@ -186,7 +186,7 @@ def mine():
     if not bc.last_block:
         last_proof = 0
     else: last_proof = bc.last_block['proof']
-    proof = bc.proof_of_work(last_proof,5)
+    proof = bc.proof_of_work(last_proof,5)  #2nd argument is the difficulty setting of the proof of work
     prev_hash = bc.hash(bc.last_block)
     bc.new_transaction('0',node_identifier,1)
 

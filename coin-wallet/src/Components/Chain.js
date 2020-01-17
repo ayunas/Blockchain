@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 
-export default function Chain() {
+export default function Chain({base_url}) {
+    
     const [chain, setChain] = useState([])
-    const url = 'http://localhost:5000/chain'
 
     useEffect(() => {
-        axios.get(url)
+        axios.get(`${base_url}/chain`)
         .then(res => {
             console.log(res.data)
             setChain(res.data.chain)

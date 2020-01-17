@@ -8,6 +8,8 @@ import lambdashield from './assets/Lambda_Avatar_Red.jpg'
 
 
 function App() {
+  const base_url = 'http://localhost:5000'
+
   return (
     <div className="App">
       <header className="App-header">
@@ -24,13 +26,13 @@ function App() {
       </header>
       <main>
         <Route path="/mine">
-          <Mine/>
+          <Mine base_url={base_url}/>
         </Route>
         <Route path="/transactions/new">
-          <Transactions/>
+          <Transactions base_url={base_url}/>
         </Route>
         <Route path="/chain">
-          <Chain/>
+          <Chain base_url={base_url}/>
         </Route>
       </main>
     </div>
