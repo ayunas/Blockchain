@@ -1,0 +1,105 @@
+$lambda-red: #BB2134;
+
+html {
+  font-size: 62.5%;
+}
+
+.App {
+  font-size: 1.6rem;
+}
+
+header {
+  
+  div:first-of-type {
+    display: flex;
+  }
+
+  img {
+    width: 100px;
+  }
+}
+
+nav {
+  display: flex;
+  justify-content: space-evenly;
+
+  a {
+    margin: 1rem;
+    text-decoration: none;
+    color: white;
+    
+  }
+}
+
+// .App {
+//   text-align: center;
+// }
+
+main {
+  display: flex;
+  justify-content: center;
+}
+
+.chain {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  width: fit-content;
+  border: 5px double $lambda-red;
+  border-radius: 1rem;
+  margin: 1vw;
+  padding: 1vw;
+
+  // li:first-child {
+  //   font-size: 2.4rem;
+  // }
+
+  li {
+    flex-basis: 30;
+    list-style-type: none;
+    font-weight: bolder;
+    line-height: 2;
+
+    &:first-child {
+      font-size: 3rem;
+    }
+
+  }
+
+  .tx {
+    border: 5px double $lambda-red;
+    width: 50%;
+  }
+
+}
+
+// @media (prefers-reduced-motion: no-preference) {
+//   .App-logo {
+//     animation: App-logo-spin infinite 20s linear;
+//   }
+// }
+
+.App-header {
+  background-color: $lambda-red;
+  min-height: 30vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+// .App-link {
+//   color: #61dafb;
+// }
+
+// @keyframes App-logo-spin {
+//   from {
+//     transform: rotate(0deg);
+//   }
+//   to {
+//     transform: rotate(360deg);
+//   }
+// }

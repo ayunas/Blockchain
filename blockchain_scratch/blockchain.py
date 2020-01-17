@@ -4,9 +4,10 @@ import random
 from time import time
 from uuid import uuid4
 from textwrap import dedent
-from urllib import urlparse
+# from urllib import urlparse
 
 from flask import Flask,jsonify,request
+from flask_cors import CORS
 
 # import names
 # t = Transaction('amir','nadia',50)
@@ -151,6 +152,8 @@ class BlockChain:
         return str(self.chain)
 
 app = Flask(__name__)
+CORS(app)
+
 
 node_identifier = str(uuid4()).replace('-', '')
 
