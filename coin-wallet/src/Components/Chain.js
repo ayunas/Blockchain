@@ -18,7 +18,7 @@ export default function Chain({base_url}) {
         <div>
             <ul>
                 {chain.map(block => (
-                    <div className="chain">
+                    <div className="block">
                         {/* <li>{JSON.stringify(block)}</li> */}
                         <li>Block Index: {block.index}</li>
                         <li>Previous Hash: {block.prev_hash}</li>

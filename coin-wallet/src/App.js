@@ -1,5 +1,7 @@
 import React,{useState, useEffect} from 'react';
 import './App.scss';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import {Route,Link,Switch} from 'react-router-dom';
 import Chain from './Components/Chain';
 import Mine from './Components/Mine';
@@ -14,7 +16,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <div>
-          <img src={lambdashield}/>
+          <img id="lambdashield" src={lambdashield}/>
           <h1>Lambda School (LS) Coin</h1>
         </div>
         <nav className="header-links">
