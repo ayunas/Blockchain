@@ -15,7 +15,7 @@ export default function Chain({base_url}) {
     },[])
 
     return (
-        <div>
+        <>
             <ul>
                 {chain.map(block => (
                     <div className="block">
@@ -36,6 +36,6 @@ export default function Chain({base_url}) {
                     )
                 )}
             </ul>
-        </div>
+        </>
     )
 }
