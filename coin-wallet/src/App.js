@@ -7,6 +7,7 @@ import Chain from './Components/Chain';
 import Mine from './Components/Mine';
 import Transactions from './Components/Transactions';
 import Header from './Components/Header';
+import Wallet from './Components/Wallet';
 
 function App() {
   const base_url = 'http://localhost:5000'
@@ -26,6 +27,9 @@ function App() {
         </Route>
         <Route path="/chain">
           <Chain base_url={base_url}/>
+        </Route>
+        <Route path="/wallet">
+          <Wallet base_url={base_url}/>
         </Route>
     </div>
   </>

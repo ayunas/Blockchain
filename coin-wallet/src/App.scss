@@ -11,10 +11,42 @@ html {
   justify-content: center;
   font-size: 1.6rem;
   // height: 70vh;
+
+  label {
+    align-self: center;
+
+    span {
+      font-size: 2rem;
+      font-weight: bolder;
+    }
+
+    input {
+      margin: 1rem;
+      width: 5rem;
+      height: 3rem;
+    }
+
+  }
 }
 
 ul {
-  height: 50%;
+  // height: 50%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  
+  span {
+    color: $lambda-red;
+    font-size: 3rem;
+    font-weight: bolder;
+  }
+
+  #filtered {
+    width: 50%;
+    word-break: break-all;
+  }
+
 }
 
 #lambdashield {
@@ -104,13 +136,6 @@ div.mine {
       border-radius: 5rem;
     }
 
-    div.block {
-      text-align: left;
-      width: 40%;
-      word-break: break-all;
-      font-size: 1rem;
-    }
-
     button {
       background-color: $lambda-red;
       color: white;
@@ -162,57 +187,63 @@ nav {
   }
 }
 
-// .App {
-//   text-align: center;
-// }
-
-main {
-  width: 100%;
-  height: 100%;
-  // display: flex;
-  // flex-direction: column;
-  // justify-content: flex-end;
-  // align-items: stretch;
-  // justify-content: center;
-  // align-items : flex-end;
-}
 
 .block {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   flex-wrap: wrap;
   align-items: flex-start;
-  width: fit-content;
+  flex-basis: 20rem;
+  height: 10rem;
+  margin: 2rem;
   border: 5px double $lambda-red;
   border-radius: 1rem;
-  margin: 1vw;
-  padding: 3vw;
+  font-size: 1rem;
+  overflow: scroll;
+  // margin: 1vw;
+  // padding: 3vw;
 
   // li:first-child {
   //   font-size: 2.4rem;
   // }
 
-  li {
-    flex-basis: 30;
-    list-style-type: none;
-    font-weight: bolder;
-    line-height: 2;
+    li {
+      flex-basis: 30;
+      list-style-type: none;
+      font-weight: bolder;
+      line-height: 2;
 
-    &:first-child {
-      font-size: 3rem;
+      &:first-child {
+        font-size: 2rem;
+      }
+
+      &:nth-child(2){
+        font-size: 1rem;
+        word-break: break-all;
+      }
     }
+
+  .tx {
+    border: 5px double $lambda-red;
+    border-radius: 1rem;
+    // background-color: $lambda-red;
+    // color: white;
+    // margin: 2rem;
+    // padding: 2rem 4rem 1rem 4rem;
+    border: .1rem dotted $lambda-red;
+
+    * {
+      word-break: break-all;
+      margin: 0;
+      padding: 0;
+      line-height: 1.5rem;  
+    }
+
   }
+
 }
 
-.tx {
-  border: 5px double $lambda-red;
-  border-radius: 50rem;
-  // background-color: $lambda-red;
-  // color: white;
-  margin: 2rem;
-  padding: 2rem 4rem 1rem 4rem;
-  border: 1rem double $lambda-red;
-}
+
 
 // @media (prefers-reduced-motion: no-preference) {
 //   .App-logo {

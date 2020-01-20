@@ -15,6 +15,7 @@ export default function Header() {
             <NavLink to="/chain">BlockChain</NavLink>
             <NavLink to="/mine">Mine Coin</NavLink>
             <NavLink to="/transactions/new">Add Transaction</NavLink>
+            <NavLink to="/wallet">Wallet</NavLink>
           </nav>
       </header>
     )
