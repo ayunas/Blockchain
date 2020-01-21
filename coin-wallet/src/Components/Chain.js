@@ -103,8 +103,8 @@ export default function Chain({base_url}) {
                             {filtered.transactions.map((tx,i) => (
                             <div className="tx">
                                 <h2>Transaction: {i+1}</h2>
-                                <li>Sender: {tx.sender ? tx.sender : 'network'}</li>
-                                <li>Receiver: {tx.receiver}</li>
+                                <li>Sender: {tx.sender == '0' ? 'LS Blockchain' : tx.sender}</li>
+                                <li>Receiver: {tx.receiver.length > 20 ? 'Miner' : tx.receiver}</li>
                                 <li>Amount: {tx.amount}</li>
                             </div>
                             ))}
