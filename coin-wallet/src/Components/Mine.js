@@ -32,6 +32,7 @@ export default function Mine({base_url}) {
                         <div className="mine-txs"> 
                             <span><strong>{mined.message}</strong></span><br/>
                             <span><strong>Transactions on Block {mined.index}: </strong></span>
+                            <hr/>
                             {mined.transactions && mined.transactions.map(tx => (  
                             <div className="mine-tx">
                                 <div><strong>Sender: </strong> {tx.sender == '0' ? 'LS Blockchain' : tx.sender}</div>

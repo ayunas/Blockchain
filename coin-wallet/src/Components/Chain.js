@@ -44,7 +44,7 @@ export default function Chain({base_url}) {
         }
     }
 
-    const blockDetail = (i) => {
+    const blockDetail = (i=null) => {
         console.log(`blockdetail ${i} clicked`);
         setShowModal(!showModal)
         const shown = chain.find(b => b.index == i)
@@ -70,59 +70,53 @@ export default function Chain({base_url}) {
                     setFiltered={setFiltered}
                     filterQuery={filterQuery} 
             />
-            <ul>
-                {showModal && 
-                            <div id="modal">
-                                <li>Block {blockModal.index}</li>
-                                <li>Previous Hash: {blockModal.prev_hash}</li>
-                                <li>Proof: {blockModal.proof}</li>
-                                <li>Timestamp: {blockModal.timestamp}</li>
-                                {blockModal.transactions && blockModal.transactions.map((tx,i) => (
-                                    <div className="tx">
-                                        <h2>Transaction: {i+1}</h2>
-                                        <li>Sender: {tx.sender ? tx.sender : 'network'}</li>
-                                        <li>Receiver: {tx.receiver}</li>
-                                        <li>Amount: {tx.amount}</li>
-                                    </div>
-                                ))}
+            {showModal && 
+                <div id="modal" className={showModal ? null : 'fade-out'} onClick={() => blockDetail(blockModal.index)}>
+                    <li>Block {blockModal.index}</li>
+                    <li>Previous Hash: {blockModal.prev_hash}</li>
+                    <li>Proof: {blockModal.proof}</li>
+                    <li>Timestamp: {blockModal.timestamp}</li>
+                    <hr/>
+                    <div className="txs">
+                        {blockModal.transactions && blockModal.transactions.map((tx,i) => (
+                            <div className="tx">
+                                <h2>Transaction: {i+1}</h2>
+                                <li>Sender: {tx.sender == '0' ? 'LS Blockchain' : tx.sender}</li>
+                                <li>Receiver: {tx.receiver.length > 20 ? 'Miner' : tx.receiver}</li>
+                                <li>Amount: {tx.amount}</li>
                             </div>
-                }
+                        ))}
+                     </div>
+                </div>
+            }
+
+            <ul className={showModal ? 'dim' : 'undim'}>
                 {filteredLength ? 
-                    <div className="block">
+                    <div className="filtered-block">
                         {/* <li>{JSON.stringify(block)}</li> */}
-                        <li>Block Index: {filtered.index}</li>
+                        <li>Block {filtered.index}</li>
                         <li>Previous Hash: {filtered.prev_hash}</li>
                         <li>Proof: {filtered.proof}</li>
                         <li>Timestamp: {filtered.timestamp}</li>
-                        {filtered.transactions.map((tx,i) => (
-                        <div className="tx">
-                            <h2>Transaction: {i+1}</h2>
-                            <li>Sender: {tx.sender ? tx.sender : 'network'}</li>
-                            <li>Receiver: {tx.receiver}</li>
-                            <li>Amount: {tx.amount}</li>
-                        </div>
-                        ))}
-                    </div> : 
-                    query > filteredLength || query < 0 || query === '0' ? <span>'No results found'</span> : 
-                        chain.map( (block,i) => (
-                        <div key={i} onClick={() => blockDetail(i+1)} className="block">
-                            {/* <li>{JSON.stringify(block)}</li> */}
-                            <li>Block {block.index}</li>
-                            {/* <li>Previous Hash: {block.prev_hash}</li>
-                            <li>Proof: {block.proof}</li>
-                            <li>Timestamp: {block.timestamp}</li>
-                            {block.transactions.map((tx,i) => (
+                        <hr/>
+                        <div className="txs">
+                            {filtered.transactions.map((tx,i) => (
                             <div className="tx">
                                 <h2>Transaction: {i+1}</h2>
                                 <li>Sender: {tx.sender ? tx.sender : 'network'}</li>
                                 <li>Receiver: {tx.receiver}</li>
                                 <li>Amount: {tx.amount}</li>
                             </div>
-                            ))} */}
+                            ))}
+                        </div>
+                    </div> : 
+                    query > filteredLength || query < 0 || query === '0' ? <span>'No results found'</span> : 
+                        chain.map( (block,i) => (
+                        <div key={i} onClick={() => blockDetail(i+1)} className="block">
+                            <li>Block {block.index}</li>
                         </div>
                         )
                 )}
-                
             </ul>
         </>
     )
